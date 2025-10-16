@@ -167,3 +167,39 @@
   color: darken($primary, 10%);
   border: 1px solid $primary;
 }
+
+.rejectForm {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid $border;
+  border-radius: 4px;
+  font-family: inherit;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+  }
+}
+
+.rejectActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btnSecondary {
+  background: $white;
+  border: 1px solid $border;
+  color: $text;
+
+  &:hover {
+    background: $bg;
+  }
+}

@@ -53,14 +53,9 @@
             <span>{{ formatDate(vacation.end_date) }}</span>
           </div>
 
-          <div :class="styles.infoRow">
-            <span :class="styles.label">Days:</span>
-            <span>{{ vacation.days_requested }} days</span>
-          </div>
-
-          <div v-if="vacation.notes" :class="styles.notes">
-            <span :class="styles.label">Notes:</span>
-            <p>{{ vacation.notes }}</p>
+          <div v-if="vacation.rejection_comment" :class="styles.notes">
+            <span :class="styles.label">Rejection Reason:</span>
+            <p>{{ vacation.rejection_comment }}</p>
           </div>
         </div>
 
@@ -72,11 +67,34 @@
             Approve
           </button>
           <button
-            @click="$emit('reject', vacation.id)"
+            @click="showRejectForm(vacation.id)"
             :class="[styles.btn, styles.btnDanger]"
           >
             Reject
           </button>
+        </div>
+
+        <div v-if="showActions && rejectingId === vacation.id" :class="styles.rejectForm">
+          <textarea
+            v-model="rejectComment"
+            :class="styles.commentInput"
+            placeholder="Provide a reason for rejection..."
+            rows="3"
+          ></textarea>
+          <div :class="styles.rejectActions">
+            <button
+              @click="confirmReject(vacation.id)"
+              :class="[styles.btn, styles.btnDanger]"
+            >
+              Confirm Reject
+            </button>
+            <button
+              @click="cancelReject"
+              :class="[styles.btn, styles.btnSecondary]"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -97,11 +115,13 @@ export default {
     }
   },
   emits: ['approve', 'reject'],
-  setup() {
+  setup(props, { emit }) {
     const vacations = ref([])
     const loading = ref(false)
     const error = ref(null)
     const statusFilter = ref('all')
+    const rejectingId = ref(null)
+    const rejectComment = ref('')
 
     const filteredVacations = computed(() => {
       if (statusFilter.value === 'all') {
@@ -137,6 +157,22 @@ export default {
       return str.charAt(0).toUpperCase() + str.slice(1)
     }
 
+    const showRejectForm = (id) => {
+      rejectingId.value = id
+      rejectComment.value = ''
+    }
+
+    const cancelReject = () => {
+      rejectingId.value = null
+      rejectComment.value = ''
+    }
+
+    const confirmReject = (id) => {
+      emit('reject', { id, comment: rejectComment.value })
+      rejectingId.value = null
+      rejectComment.value = ''
+    }
+
     onMounted(() => {
       fetchVacations()
     })
@@ -147,9 +183,14 @@ export default {
       error,
       statusFilter,
       filteredVacations,
+      rejectingId,
+      rejectComment,
       formatDate,
       capitalize,
       fetchVacations,
+      showRejectForm,
+      cancelReject,
+      confirmReject,
       styles
     }
   }

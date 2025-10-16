@@ -86,9 +86,12 @@ export default {
       }
     }
 
-    const handleReject = async (id) => {
+    const handleReject = async ({ id, comment }) => {
       try {
-        await axios.put(`/api/vacations/${id}`, { status: 'rejected' })
+        await axios.put(`/api/vacations/${id}`, { 
+          status: 'rejected',
+          rejection_comment: comment 
+        })
         showMessage('Vacation request rejected.', 'Error')
         vacationListRef.value.fetchVacations()
       } catch (error) {

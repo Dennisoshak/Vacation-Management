@@ -49,28 +49,6 @@
         </div>
       </div>
 
-      <div :class="styles.formGroup">
-        <label for="daysRequested">Days Requested *</label>
-        <input
-          id="daysRequested"
-          v-model.number="formData.days_requested"
-          type="number"
-          required
-          min="1"
-          placeholder="Number of days"
-        />
-      </div>
-
-      <div :class="styles.formGroup">
-        <label for="notes">Notes (Optional)</label>
-        <textarea
-          id="notes"
-          v-model="formData.notes"
-          rows="4"
-          placeholder="Add any additional information..."
-        ></textarea>
-      </div>
-
       <div v-if="error" :class="[styles.alert, styles.alertError]">
         {{ error }}
       </div>
@@ -103,9 +81,7 @@ export default {
       employee_name: '',
       employee_email: '',
       start_date: '',
-      end_date: '',
-      days_requested: '',
-      notes: ''
+      end_date: ''
     })
 
     const loading = ref(false)
@@ -122,9 +98,7 @@ export default {
         employee_name: '',
         employee_email: '',
         start_date: '',
-        end_date: '',
-        days_requested: '',
-        notes: ''
+        end_date: ''
       }
       error.value = null
       success.value = null

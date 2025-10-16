@@ -9,9 +9,8 @@ export const up = async (knex) => {
     table.string('employee_email').notNullable()
     table.date('start_date').notNullable()
     table.date('end_date').notNullable()
-    table.integer('days_requested').notNullable()
     table.enum('status', ['pending', 'approved', 'rejected']).defaultTo('pending')
-    table.text('notes')
+    table.text('rejection_comment')
     table.timestamps(true, true)
   })
 }
