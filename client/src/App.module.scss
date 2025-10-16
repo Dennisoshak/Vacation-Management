@@ -1,0 +1,57 @@
+@use './styles/variables.scss' as *;
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  background: $white;
+  border-bottom: 1px solid $border;
+  padding: 1rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text;
+}
+
+.navLinks {
+  display: flex;
+  gap: 2rem;
+
+  a {
+    color: $text-light;
+    text-decoration: none;
+
+    &:hover,
+    &.active {
+      color: $primary;
+    }
+  }
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.footer {
+  background: $white;
+  border-top: 1px solid $border;
+  padding: 1.5rem 0;
+  text-align: center;
+  color: $text-light;
+  font-size: 0.875rem;
+}

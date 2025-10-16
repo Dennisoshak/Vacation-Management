@@ -1,0 +1,74 @@
+@use '../styles/variables.scss' as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2rem;
+    color: $text;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.subtitle {
+  color: $text-light;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: $white;
+  border: 1px solid $border;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $primary;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  color: $text-light;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.alert {
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.alertSuccess {
+  background: lighten($success, 45%);
+  color: darken($success, 20%);
+  border: 1px solid $success;
+}
+
+.alertError {
+  background: lighten($error, 40%);
+  color: darken($error, 10%);
+  border: 1px solid $error;
+}
+
+.alertInfo {
+  background: lighten($primary, 45%);
+  color: darken($primary, 10%);
+  border: 1px solid $primary;
+}

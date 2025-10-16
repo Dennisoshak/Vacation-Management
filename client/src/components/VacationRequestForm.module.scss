@@ -1,0 +1,102 @@
+@use '../styles/variables.scss' as *;
+
+.formContainer {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 600px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $text;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid $border;
+    border-radius: 4px;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btnPrimary {
+  background: $primary;
+  color: $white;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+}
+
+.btnSecondary {
+  background: $white;
+  border: 1px solid $border;
+  color: $text;
+
+  &:hover:not(:disabled) {
+    background: $bg;
+  }
+}
+
+.alert {
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.alertSuccess {
+  background: lighten($success, 45%);
+  color: darken($success, 20%);
+  border: 1px solid $success;
+}
+
+.alertError {
+  background: lighten($error, 40%);
+  color: darken($error, 10%);
+  border: 1px solid $error;
+}

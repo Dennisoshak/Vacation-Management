@@ -1,0 +1,34 @@
+@use '../styles/variables.scss' as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2rem;
+    color: $text;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.subtitle {
+  color: $text-light;
+}
+
+.content {
+  display: grid;
+  gap: 3rem;
+}
+
+.listSection {
+  h2 {
+    margin-bottom: 1.5rem;
+    color: $text;
+  }
+}
