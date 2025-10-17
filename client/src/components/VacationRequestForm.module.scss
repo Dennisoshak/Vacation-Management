@@ -22,9 +22,9 @@
     color: $text;
   }
 
+  select,
   input,
-  textarea,
-  select {
+  textarea {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid $border;
@@ -39,6 +39,17 @@
 
   textarea {
     resize: vertical;
+  }
+}
+
+.readonlyInput {
+  background-color: $bg;
+  cursor: not-allowed;
+  color: $text;
+  font-weight: 500;
+  
+  &:focus {
+    border-color: $border !important;
   }
 }
 
@@ -100,4 +111,10 @@
   background: $error-light;
   color: $error-dark;
   border-color: $error;
+}
+
+.alertInfo {
+  background: $primary-light;
+  color: $primary-dark;
+  border-color: $primary;
 }

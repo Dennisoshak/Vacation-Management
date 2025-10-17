@@ -2,19 +2,20 @@
   <div :class="styles.formContainer">
     <h2>Request Vacation</h2>
     
-    <form @submit.prevent="handleSubmit" :class="styles.form">
+    <div v-if="isValidator" :class="[styles.alert, styles.alertInfo]">
+      Validators cannot submit vacation requests. Please select a requester user to submit a request on their behalf.
+    </div>
+    
+    <form v-if="!isValidator" @submit.prevent="handleSubmit" :class="styles.form">
       <div :class="styles.formGroup">
-        <label for="userId">Select User *</label>
-        <select
-          id="userId"
-          v-model="formData.user_id"
-          required
-        >
-          <option value="">-- Select a user --</option>
-          <option v-for="user in requesters" :key="user.id" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
+        <label for="userName">User *</label>
+        <input
+          id="userName"
+          type="text"
+          :value="currentUser?.name || 'No user selected'"
+          readonly
+          :class="styles.readonlyInput"
+        />
       </div>
 
       <div :class="styles.formRow">
@@ -81,43 +82,29 @@ export default {
   emits: ['submitted'],
   setup(props, { emit }) {
     const currentUserId = inject('currentUserId', ref(null))
+    const currentUser = inject('currentUser', ref(null))
     
     const formData = ref({
-      user_id: '',
       start_date: '',
       end_date: '',
       reason: ''
     })
 
-    const requesters = ref([])
     const loading = ref(false)
     const error = ref(null)
     const success = ref(null)
     
-    // Watch for current user changes and pre-select
-    watch(currentUserId, (newId) => {
-      if (newId && !formData.value.user_id) {
-        formData.value.user_id = newId
-      }
-    }, { immediate: true })
+    const isValidator = computed(() => {
+      return currentUser.value?.role === 'validator'
+    })
 
     const minDate = computed(() => {
       const today = new Date()
       return today.toISOString().split('T')[0]
     })
 
-    const fetchRequesters = async () => {
-      try {
-        const response = await axios.get('/api/users')
-        requesters.value = response.data
-      } catch (err) {
-        console.error('Error fetching users:', err)
-      }
-    }
-
     const resetForm = () => {
       formData.value = {
-        user_id: '',
         start_date: '',
         end_date: '',
         reason: ''
@@ -127,12 +114,23 @@ export default {
     }
 
     const handleSubmit = async () => {
+      if (!currentUserId.value) {
+        error.value = 'Please select a user from the header first.'
+        return
+      }
+
       loading.value = true
       error.value = null
       success.value = null
 
       try {
-        await axios.post('/api/vacations', formData.value)
+        // Include user_id from the selected user in header
+        const requestData = {
+          ...formData.value,
+          user_id: currentUserId.value
+        }
+        
+        await axios.post('/api/vacations', requestData)
         success.value = 'Vacation request submitted successfully!'
         
         // Emit event to notify parent component
@@ -149,16 +147,13 @@ export default {
       }
     }
 
-    onMounted(() => {
-      fetchRequesters()
-    })
-
     return {
       formData,
-      requesters,
+      currentUser,
       loading,
       error,
       success,
+      isValidator,
       minDate,
       handleSubmit,
       resetForm,
