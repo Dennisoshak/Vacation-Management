@@ -21,6 +21,17 @@
   color: $text-light;
 }
 
+.alert {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: $primary-light;
+  color: $primary-dark;
+  border: 1px solid $primary;
+  border-radius: 4px;
+  text-align: center;
+}
+
 .content {
   display: grid;
   gap: 3rem;

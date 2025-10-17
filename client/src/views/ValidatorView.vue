@@ -7,7 +7,15 @@
       </p>
     </div>
 
-    <div :class="styles.stats">
+    <div v-if="!currentUser" :class="[styles.alert, styles.alertInfo]">
+      Please select a user from the top navigation bar.
+    </div>
+
+    <div v-else-if="!isValidator" :class="[styles.alert, styles.alertError]">
+      Only validators can manage vacation requests. The selected user "{{ currentUser.name }}" is a {{ currentUser.role }}.
+    </div>
+
+    <div v-if="isValidator" :class="styles.stats">
       <div :class="styles.statCard">
         <div :class="styles.statValue">{{ stats.pending }}</div>
         <div :class="styles.statLabel">Pending</div>
@@ -26,11 +34,12 @@
       </div>
     </div>
 
-    <div v-if="message" :class="[styles.alert, styles[`alert${message.type}`]]">
+    <div v-if="isValidator && message" :class="[styles.alert, styles[`alert${message.type}`]]">
       {{ message.text }}
     </div>
 
     <VacationList
+      v-if="isValidator"
       ref="vacationListRef"
       :show-actions="true"
       @approve="handleApprove"
@@ -40,7 +49,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, inject } from 'vue'
 import axios from 'axios'
 import VacationList from '../components/VacationList.vue'
 import styles from './ValidatorView.module.scss'
@@ -53,6 +62,11 @@ export default {
   setup() {
     const vacationListRef = ref(null)
     const message = ref(null)
+    const currentUser = inject('currentUser', ref(null))
+    
+    const isValidator = computed(() => {
+      return currentUser.value?.role === 'validator'
+    })
 
     const stats = computed(() => {
       if (!vacationListRef.value?.vacations) {
@@ -103,6 +117,8 @@ export default {
     return {
       vacationListRef,
       message,
+      currentUser,
+      isValidator,
       stats,
       handleApprove,
       handleReject,

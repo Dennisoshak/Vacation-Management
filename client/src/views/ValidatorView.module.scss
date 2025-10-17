@@ -8,7 +8,7 @@
 
 .header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   h1 {
     font-size: 2rem;
@@ -56,19 +56,19 @@
 }
 
 .alertSuccess {
-  background: lighten($success, 45%);
-  color: darken($success, 20%);
-  border: 1px solid $success;
+  background: $success-light;
+  color: $success-dark;
+  border-color: $success;
 }
 
 .alertError {
-  background: lighten($error, 40%);
-  color: darken($error, 10%);
-  border: 1px solid $error;
+  background: $error-light;
+  color: $error-dark;
+  border-color: $error;
 }
 
 .alertInfo {
-  background: lighten($primary, 45%);
-  color: darken($primary, 10%);
-  border: 1px solid $primary;
+  background: $primary-light;
+  color: $primary-dark;
+  border-color: $primary;
 }

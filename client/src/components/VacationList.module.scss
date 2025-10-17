@@ -62,18 +62,18 @@
 }
 
 .badgePending {
-  background: lighten($warning, 35%);
-  color: darken($warning, 20%);
+  background: $warning-light;
+  color: $warning;
 }
 
 .badgeApproved {
-  background: lighten($success, 45%);
-  color: darken($success, 20%);
+  background: $success-light;
+  color: $success-dark;
 }
 
 .badgeRejected {
-  background: lighten($error, 40%);
-  color: darken($error, 10%);
+  background: $error-light;
+  color: $error-dark;
 }
 
 .cardBody {
@@ -151,20 +151,20 @@
 }
 
 .alertSuccess {
-  background: lighten($success, 45%);
-  color: darken($success, 20%);
+  background: $success-light;
+  color: $success-dark;
   border: 1px solid $success;
 }
 
 .alertError {
-  background: lighten($error, 40%);
-  color: darken($error, 10%);
+  background: $error-light;
+  color: $error-dark;
   border: 1px solid $error;
 }
 
 .alertInfo {
-  background: lighten($primary, 45%);
-  color: darken($primary, 10%);
+  background: $primary-light;
+  color: $primary-dark;
   border: 1px solid $primary;
 }
 

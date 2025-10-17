@@ -7,13 +7,17 @@
       </p>
     </div>
 
-    <div :class="styles.content">
+    <div v-if="!currentUser" :class="styles.alert">
+      Please select a user from the top navigation bar to continue.
+    </div>
+
+    <div v-else :class="styles.content">
       <div :class="styles.formSection">
         <VacationRequestForm />
       </div>
 
       <div :class="styles.listSection">
-        <h2>My Vacation Requests</h2>
+        <h2>{{ currentUser.role === 'requester' ? 'My Vacation Requests' : 'All Vacation Requests' }}</h2>
         <VacationList :show-actions="false" />
       </div>
     </div>
@@ -21,6 +25,7 @@
 </template>
 
 <script>
+import { inject, ref } from 'vue'
 import VacationRequestForm from '../components/VacationRequestForm.vue'
 import VacationList from '../components/VacationList.vue'
 import styles from './RequesterView.module.scss'
@@ -32,7 +37,10 @@ export default {
     VacationList
   },
   setup() {
+    const currentUser = inject('currentUser', ref(null))
+    
     return {
+      currentUser,
       styles
     }
   }

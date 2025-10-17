@@ -72,13 +72,15 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, inject, watch } from 'vue'
 import axios from 'axios'
 import styles from './VacationRequestForm.module.scss'
 
 export default {
   name: 'VacationRequestForm',
   setup() {
+    const currentUserId = inject('currentUserId', ref(null))
+    
     const formData = ref({
       user_id: '',
       start_date: '',
@@ -90,6 +92,13 @@ export default {
     const loading = ref(false)
     const error = ref(null)
     const success = ref(null)
+    
+    // Watch for current user changes and pre-select
+    watch(currentUserId, (newId) => {
+      if (newId && !formData.value.user_id) {
+        formData.value.user_id = newId
+      }
+    }, { immediate: true })
 
     const minDate = computed(() => {
       const today = new Date()
@@ -98,10 +107,10 @@ export default {
 
     const fetchRequesters = async () => {
       try {
-        const response = await axios.get('/api/users/role/requester')
+        const response = await axios.get('/api/users')
         requesters.value = response.data
       } catch (err) {
-        console.error('Error fetching requesters:', err)
+        console.error('Error fetching users:', err)
       }
     }
 

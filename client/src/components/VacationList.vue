@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, inject } from 'vue'
 import axios from 'axios'
 import styles from './VacationList.module.scss'
 
@@ -122,12 +122,26 @@ export default {
     const statusFilter = ref('all')
     const rejectingId = ref(null)
     const rejectComment = ref('')
+    const currentUser = inject('currentUser', ref(null))
+    const currentUserId = inject('currentUserId', ref(null))
 
     const filteredVacations = computed(() => {
-      if (statusFilter.value === 'all') {
-        return vacations.value
+      if (!vacations.value) return []
+      
+      let filtered = vacations.value
+      
+      // If current user is a requester, only show their requests
+      if (currentUser?.value?.role === 'requester' && currentUserId?.value) {
+        const userId = Number(currentUserId.value)
+        filtered = filtered.filter(v => v.user_id === userId)
       }
-      return vacations.value.filter(v => v.status === statusFilter.value)
+      
+      // Apply status filter
+      if (statusFilter.value !== 'all') {
+        filtered = filtered.filter(v => v.status === statusFilter.value)
+      }
+      
+      return filtered
     })
 
     const fetchVacations = async () => {
