@@ -1,7 +1,6 @@
 <template>
   <div :class="styles.listContainer">
     <div :class="styles.header">
-      <h2>Vacation Requests</h2>
       <div :class="styles.filters">
         <select v-model="statusFilter" :class="styles.filterSelect">
           <option value="all">All Status</option>

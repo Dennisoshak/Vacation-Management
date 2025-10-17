@@ -37,7 +37,8 @@
     <div v-if="isValidator && message" :class="[styles.alert, styles[`alert${message.type}`]]">
       {{ message.text }}
     </div>
-
+    <div :class="styles.listSection">
+    <h2>Vacation Requests</h2>
     <VacationList
       v-if="isValidator"
       ref="vacationListRef"
@@ -45,6 +46,7 @@
       @approve="handleApprove"
       @reject="handleReject"
     />
+    </div>
   </div>
 </template>
 
