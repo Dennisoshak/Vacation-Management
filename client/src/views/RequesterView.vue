@@ -13,12 +13,12 @@
 
     <div v-else :class="styles.content">
       <div :class="styles.formSection">
-        <VacationRequestForm />
+        <VacationRequestForm @submitted="handleFormSubmit" />
       </div>
 
       <div :class="styles.listSection">
         <h2>{{ currentUser.role === 'requester' ? 'My Vacation Requests' : 'All Vacation Requests' }}</h2>
-        <VacationList :show-actions="false" />
+        <VacationList ref="vacationListRef" :show-actions="false" />
       </div>
     </div>
   </div>
@@ -38,9 +38,19 @@ export default {
   },
   setup() {
     const currentUser = inject('currentUser', ref(null))
+    const vacationListRef = ref(null)
+    
+    const handleFormSubmit = () => {
+      // Refresh the vacation list after form submission
+      if (vacationListRef.value) {
+        vacationListRef.value.fetchVacations()
+      }
+    }
     
     return {
       currentUser,
+      vacationListRef,
+      handleFormSubmit,
       styles
     }
   }

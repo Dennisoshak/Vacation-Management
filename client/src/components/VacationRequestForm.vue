@@ -78,7 +78,8 @@ import styles from './VacationRequestForm.module.scss'
 
 export default {
   name: 'VacationRequestForm',
-  setup() {
+  emits: ['submitted'],
+  setup(props, { emit }) {
     const currentUserId = inject('currentUserId', ref(null))
     
     const formData = ref({
@@ -133,6 +134,10 @@ export default {
       try {
         await axios.post('/api/vacations', formData.value)
         success.value = 'Vacation request submitted successfully!'
+        
+        // Emit event to notify parent component
+        emit('submitted')
+        
         setTimeout(() => {
           resetForm()
         }, 2000)
