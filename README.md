@@ -1,6 +1,6 @@
 # Vacation Management System
 
-A full-stack vacation management application built with Vue 3, Express, and PostgreSQL.
+A full-stack vacation management application built with Vue 3, Express, and SQLLite.
 
 ## Tech Stack
 
@@ -48,77 +48,48 @@ vacation-management/
 
 ## Getting Started
 
-### 1. Clone and Install Dependencies
+### 1. Install Dependencies
 
 ```bash
 # Install all dependencies (root, client, and server)
 npm run install:all
 ```
 
-### 2. Configure Environment Variables (Optional)
-
-Copy the example environment file in the server directory:
-
-```bash
-cp server/.env.example server/.env
-```
-
-The SQLite database file will be created automatically when you run migrations.
-
-### 3. Run Database Migrations
+### 2. Run Database Migrations
 
 ```bash
 cd server
 npm run migrate:latest
 ```
 
-### 4. Seed the Database (Optional)
+### 3. Seed the Database (Optional)
 
 ```bash
 npm run seed:run
 ```
 
-### 5. Start Development Servers
+### 4. Start Development Servers
 
 From the root directory:
 
 ```bash
+cd ..
 npm run dev
 ```
 
-This will start both the frontend (http://localhost:3000) and backend (http://localhost:5000) servers concurrently.
-
-Or start them separately:
-
-```bash
-# Frontend only
-npm run dev:client
-
-# Backend only
-npm run dev:server
-```
+This will start both the frontend (http://localhost:3000) and backend (http://localhost:5000) servers.
 
 ## Available Scripts
 
 ### Root Directory
-- `npm run dev` - Start both client and server in development mode
+- `npm run dev` - Start both client and server
 - `npm run install:all` - Install dependencies for all projects
-- `npm run build` - Build the client for production
-- `npm start` - Start the production server
-
-### Client Directory
-- `npm run dev` - Start Vite development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
 
 ### Server Directory
 - `npm run dev` - Start server with nodemon
-- `npm start` - Start server in production mode
 - `npm run migrate:latest` - Run all migrations
 - `npm run migrate:rollback` - Rollback last migration
-- `npm run migrate:make <name>` - Create a new migration
 - `npm run seed:run` - Run all seeds
-- `npm run seed:make <name>` - Create a new seed
 
 ## API Endpoints
 
@@ -129,20 +100,10 @@ npm run dev:server
 - `PUT /api/vacations/:id` - Update vacation
 - `DELETE /api/vacations/:id` - Delete vacation
 
-## Development
+## Notes
 
-The frontend development server runs on port 3000 and proxies API requests to the backend on port 5000. This is configured in `client/vite.config.js`.
-
-## Production Build
-
-```bash
-# Build the client
-npm run build
-
-# Start the production server
-npm start
-```
-
-## License
-
-ISC
+- This is a local development project
+- Frontend runs on port 3000
+- Backend runs on port 5000
+- Database is SQLite (file-based, no setup required)
+- All data is stored in `server/database.sqlite`
