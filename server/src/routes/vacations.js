@@ -3,10 +3,44 @@ import db from '../config/database.js'
 
 const router = express.Router()
 
+// Input validation helper
+const validateVacationRequest = (data) => {
+  const errors = []
+  
+  if (!data.user_id) {
+    errors.push('user_id is required')
+  }
+  
+  if (!data.start_date) {
+    errors.push('start_date is required')
+  }
+  
+  if (!data.end_date) {
+    errors.push('end_date is required')
+  }
+  
+  if (data.start_date && data.end_date) {
+    const startDate = new Date(data.start_date)
+    const endDate = new Date(data.end_date)
+    
+    if (startDate > endDate) {
+      errors.push('start_date must be before or equal to end_date')
+    }
+    
+    if (startDate < new Date().setHours(0, 0, 0, 0)) {
+      errors.push('start_date cannot be in the past')
+    }
+  }
+  
+  return errors
+}
+
 // GET all vacation requests with user info
 router.get('/', async (req, res) => {
   try {
-    const requests = await db('vacation_requests')
+    const { user_id } = req.query
+    
+    let query = db('vacation_requests')
       .join('users', 'vacation_requests.user_id', '=', 'users.id')
       .select(
         'vacation_requests.*',
@@ -15,6 +49,13 @@ router.get('/', async (req, res) => {
       )
       .orderBy('vacation_requests.created_at', 'desc')
     
+    // Filter by user_id if provided (for requesters to see only their requests)
+    if (user_id) {
+      query = query.where('vacation_requests.user_id', '=', user_id)
+    }
+    
+    const requests = await query
+    
     res.json(requests)
   } catch (error) {
     console.error('Error fetching vacation requests:', error)
@@ -22,34 +63,35 @@ router.get('/', async (req, res) => {
   }
 })
 
-// GET vacation request by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const request = await db('vacation_requests')
-      .join('users', 'vacation_requests.user_id', '=', 'users.id')
-      .select(
-        'vacation_requests.*',
-        'users.name as user_name',
-        'users.role as user_role'
-      )
-      .where('vacation_requests.id', '=', req.params.id)
-      .first()
-    
-    if (!request) {
-      return res.status(404).json({ error: 'Vacation request not found' })
-    }
-    
-    res.json(request)
-  } catch (error) {
-    console.error('Error fetching vacation request:', error)
-    res.status(500).json({ error: 'Failed to fetch vacation request', message: error.message })
-  }
-})
-
-// POST create new vacation request
+// POST create new vacation request (Submit a vacation request)
 router.post('/', async (req, res) => {
   try {
-    const [id] = await db('vacation_requests').insert(req.body)
+    // Validate input
+    const validationErrors = validateVacationRequest(req.body)
+    if (validationErrors.length > 0) {
+      return res.status(400).json({ 
+        error: 'Validation failed', 
+        errors: validationErrors 
+      })
+    }
+    
+    // Verify user exists
+    const user = await db('users').where({ id: req.body.user_id }).first()
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+    
+    // Create vacation request with default status 'pending'
+    const requestData = {
+      user_id: req.body.user_id,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
+      reason: req.body.reason || null,
+      status: 'pending',
+      comments: null
+    }
+    
+    const [id] = await db('vacation_requests').insert(requestData)
     
     // Fetch the created request with user info
     const request = await db('vacation_requests')
@@ -69,17 +111,27 @@ router.post('/', async (req, res) => {
   }
 })
 
-// PUT update vacation request
-router.put('/:id', async (req, res) => {
+// PATCH approve vacation request
+router.patch('/:id/approve', async (req, res) => {
   try {
-    const updated = await db('vacation_requests')
-      .where({ id: req.params.id })
-      .update(req.body)
+    const { id } = req.params
+    const { comments } = req.body
     
-    if (!updated) {
+    // Check if request exists
+    const existingRequest = await db('vacation_requests').where({ id }).first()
+    if (!existingRequest) {
       return res.status(404).json({ error: 'Vacation request not found' })
     }
     
+    // Update status to approved
+    await db('vacation_requests')
+      .where({ id })
+      .update({
+        status: 'approved',
+        comments: comments || null
+      })
+    
+    // Fetch updated request with user info
     const request = await db('vacation_requests')
       .join('users', 'vacation_requests.user_id', '=', 'users.id')
       .select(
@@ -87,31 +139,51 @@ router.put('/:id', async (req, res) => {
         'users.name as user_name',
         'users.role as user_role'
       )
-      .where('vacation_requests.id', '=', req.params.id)
+      .where('vacation_requests.id', '=', id)
       .first()
     
     res.json(request)
   } catch (error) {
-    console.error('Error updating vacation request:', error)
-    res.status(500).json({ error: 'Failed to update vacation request', message: error.message })
+    console.error('Error approving vacation request:', error)
+    res.status(500).json({ error: 'Failed to approve vacation request', message: error.message })
   }
 })
 
-// DELETE vacation request
-router.delete('/:id', async (req, res) => {
+// PATCH reject vacation request
+router.patch('/:id/reject', async (req, res) => {
   try {
-    const deleted = await db('vacation_requests')
-      .where({ id: req.params.id })
-      .del()
+    const { id } = req.params
+    const { comments } = req.body
     
-    if (!deleted) {
+    // Check if request exists
+    const existingRequest = await db('vacation_requests').where({ id }).first()
+    if (!existingRequest) {
       return res.status(404).json({ error: 'Vacation request not found' })
     }
     
-    res.json({ message: 'Vacation request deleted successfully' })
+    // Update status to rejected (comments are optional)
+    await db('vacation_requests')
+      .where({ id })
+      .update({
+        status: 'rejected',
+        comments: comments || null
+      })
+    
+    // Fetch updated request with user info
+    const request = await db('vacation_requests')
+      .join('users', 'vacation_requests.user_id', '=', 'users.id')
+      .select(
+        'vacation_requests.*',
+        'users.name as user_name',
+        'users.role as user_role'
+      )
+      .where('vacation_requests.id', '=', id)
+      .first()
+    
+    res.json(request)
   } catch (error) {
-    console.error('Error deleting vacation request:', error)
-    res.status(500).json({ error: 'Failed to delete vacation request', message: error.message })
+    console.error('Error rejecting vacation request:', error)
+    res.status(500).json({ error: 'Failed to reject vacation request', message: error.message })
   }
 })
 

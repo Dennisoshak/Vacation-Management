@@ -14,10 +14,6 @@
     <main :class="styles.mainContent">
       <router-view />
     </main>
-    
-    <footer :class="styles.footer">
-      <p>&copy; 2025 Vacation Management System</p>
-    </footer>
   </div>
 </template>
 

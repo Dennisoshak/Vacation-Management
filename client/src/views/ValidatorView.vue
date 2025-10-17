@@ -93,7 +93,7 @@ export default {
 
     const handleApprove = async (id) => {
       try {
-        await axios.put(`/api/vacations/${id}`, { status: 'approved' })
+        await axios.patch(`/api/vacations/${id}/approve`)
         showMessage('Vacation request approved successfully!', 'Success')
         vacationListRef.value.fetchVacations()
       } catch (error) {
@@ -104,8 +104,7 @@ export default {
 
     const handleReject = async ({ id, comment }) => {
       try {
-        await axios.put(`/api/vacations/${id}`, { 
-          status: 'rejected',
+        await axios.patch(`/api/vacations/${id}/reject`, { 
           comments: comment 
         })
         showMessage('Vacation request rejected.', 'Error')
