@@ -31,18 +31,13 @@
         :class="styles.vacationCard"
       >
         <div :class="styles.cardHeader">
-          <h3>{{ vacation.employee_name }}</h3>
+          <h3>{{ vacation.user_name }}</h3>
           <span :class="[styles.badge, styles[`badge${capitalize(vacation.status)}`]]">
             {{ vacation.status }}
           </span>
         </div>
 
         <div :class="styles.cardBody">
-          <div :class="styles.infoRow">
-            <span :class="styles.label">Email:</span>
-            <span>{{ vacation.employee_email }}</span>
-          </div>
-
           <div :class="styles.infoRow">
             <span :class="styles.label">Start Date:</span>
             <span>{{ formatDate(vacation.start_date) }}</span>
@@ -53,9 +48,14 @@
             <span>{{ formatDate(vacation.end_date) }}</span>
           </div>
 
-          <div v-if="vacation.rejection_comment" :class="styles.notes">
-            <span :class="styles.label">Rejection Reason:</span>
-            <p>{{ vacation.rejection_comment }}</p>
+          <div v-if="vacation.reason" :class="styles.notes">
+            <span :class="styles.label">Reason:</span>
+            <p>{{ vacation.reason }}</p>
+          </div>
+
+          <div v-if="vacation.comments && vacation.status === 'rejected'" :class="styles.notes">
+            <span :class="styles.label">Rejection Comments:</span>
+            <p>{{ vacation.comments }}</p>
           </div>
         </div>
 

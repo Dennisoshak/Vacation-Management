@@ -4,25 +4,17 @@
     
     <form @submit.prevent="handleSubmit" :class="styles.form">
       <div :class="styles.formGroup">
-        <label for="employeeName">Your Name *</label>
-        <input
-          id="employeeName"
-          v-model="formData.employee_name"
-          type="text"
+        <label for="userId">Select User *</label>
+        <select
+          id="userId"
+          v-model="formData.user_id"
           required
-          placeholder="Enter your full name"
-        />
-      </div>
-
-      <div :class="styles.formGroup">
-        <label for="employeeEmail">Email *</label>
-        <input
-          id="employeeEmail"
-          v-model="formData.employee_email"
-          type="email"
-          required
-          placeholder="your.email@example.com"
-        />
+        >
+          <option value="">-- Select a user --</option>
+          <option v-for="user in requesters" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
       </div>
 
       <div :class="styles.formRow">
@@ -49,6 +41,16 @@
         </div>
       </div>
 
+      <div :class="styles.formGroup">
+        <label for="reason">Reason (Optional)</label>
+        <textarea
+          id="reason"
+          v-model="formData.reason"
+          rows="3"
+          placeholder="Reason for vacation request..."
+        ></textarea>
+      </div>
+
       <div v-if="error" :class="[styles.alert, styles.alertError]">
         {{ error }}
       </div>
@@ -70,7 +72,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import styles from './VacationRequestForm.module.scss'
 
@@ -78,12 +80,13 @@ export default {
   name: 'VacationRequestForm',
   setup() {
     const formData = ref({
-      employee_name: '',
-      employee_email: '',
+      user_id: '',
       start_date: '',
-      end_date: ''
+      end_date: '',
+      reason: ''
     })
 
+    const requesters = ref([])
     const loading = ref(false)
     const error = ref(null)
     const success = ref(null)
@@ -93,12 +96,21 @@ export default {
       return today.toISOString().split('T')[0]
     })
 
+    const fetchRequesters = async () => {
+      try {
+        const response = await axios.get('/api/users/role/requester')
+        requesters.value = response.data
+      } catch (err) {
+        console.error('Error fetching requesters:', err)
+      }
+    }
+
     const resetForm = () => {
       formData.value = {
-        employee_name: '',
-        employee_email: '',
+        user_id: '',
         start_date: '',
-        end_date: ''
+        end_date: '',
+        reason: ''
       }
       error.value = null
       success.value = null
@@ -123,8 +135,13 @@ export default {
       }
     }
 
+    onMounted(() => {
+      fetchRequesters()
+    })
+
     return {
       formData,
+      requesters,
       loading,
       error,
       success,

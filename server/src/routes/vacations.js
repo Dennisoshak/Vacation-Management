@@ -3,83 +3,115 @@ import db from '../config/database.js'
 
 const router = express.Router()
 
-// GET all vacations
+// GET all vacation requests with user info
 router.get('/', async (req, res) => {
   try {
-    const vacations = await db('vacations').select('*')
-    res.json(vacations)
+    const requests = await db('vacation_requests')
+      .join('users', 'vacation_requests.user_id', '=', 'users.id')
+      .select(
+        'vacation_requests.*',
+        'users.name as user_name',
+        'users.role as user_role'
+      )
+      .orderBy('vacation_requests.created_at', 'desc')
+    
+    res.json(requests)
   } catch (error) {
-    console.error('Error fetching vacations:', error)
-    res.status(500).json({ error: 'Failed to fetch vacations' })
+    console.error('Error fetching vacation requests:', error)
+    res.status(500).json({ error: 'Failed to fetch vacation requests', message: error.message })
   }
 })
 
-// GET vacation by ID
+// GET vacation request by ID
 router.get('/:id', async (req, res) => {
   try {
-    const vacation = await db('vacations')
-      .where({ id: req.params.id })
+    const request = await db('vacation_requests')
+      .join('users', 'vacation_requests.user_id', '=', 'users.id')
+      .select(
+        'vacation_requests.*',
+        'users.name as user_name',
+        'users.role as user_role'
+      )
+      .where('vacation_requests.id', '=', req.params.id)
       .first()
     
-    if (!vacation) {
-      return res.status(404).json({ error: 'Vacation not found' })
+    if (!request) {
+      return res.status(404).json({ error: 'Vacation request not found' })
     }
     
-    res.json(vacation)
+    res.json(request)
   } catch (error) {
-    console.error('Error fetching vacation:', error)
-    res.status(500).json({ error: 'Failed to fetch vacation' })
+    console.error('Error fetching vacation request:', error)
+    res.status(500).json({ error: 'Failed to fetch vacation request', message: error.message })
   }
 })
 
-// POST create new vacation
+// POST create new vacation request
 router.post('/', async (req, res) => {
   try {
-    const [vacation] = await db('vacations')
-      .insert(req.body)
-      .returning('*')
+    const [id] = await db('vacation_requests').insert(req.body)
     
-    res.status(201).json(vacation)
+    // Fetch the created request with user info
+    const request = await db('vacation_requests')
+      .join('users', 'vacation_requests.user_id', '=', 'users.id')
+      .select(
+        'vacation_requests.*',
+        'users.name as user_name',
+        'users.role as user_role'
+      )
+      .where('vacation_requests.id', '=', id)
+      .first()
+    
+    res.status(201).json(request)
   } catch (error) {
-    console.error('Error creating vacation:', error)
-    res.status(500).json({ error: 'Failed to create vacation' })
+    console.error('Error creating vacation request:', error)
+    res.status(500).json({ error: 'Failed to create vacation request', message: error.message })
   }
 })
 
-// PUT update vacation
+// PUT update vacation request
 router.put('/:id', async (req, res) => {
   try {
-    const [vacation] = await db('vacations')
+    const updated = await db('vacation_requests')
       .where({ id: req.params.id })
       .update(req.body)
-      .returning('*')
     
-    if (!vacation) {
-      return res.status(404).json({ error: 'Vacation not found' })
+    if (!updated) {
+      return res.status(404).json({ error: 'Vacation request not found' })
     }
     
-    res.json(vacation)
+    const request = await db('vacation_requests')
+      .join('users', 'vacation_requests.user_id', '=', 'users.id')
+      .select(
+        'vacation_requests.*',
+        'users.name as user_name',
+        'users.role as user_role'
+      )
+      .where('vacation_requests.id', '=', req.params.id)
+      .first()
+    
+    res.json(request)
   } catch (error) {
-    console.error('Error updating vacation:', error)
-    res.status(500).json({ error: 'Failed to update vacation' })
+    console.error('Error updating vacation request:', error)
+    res.status(500).json({ error: 'Failed to update vacation request', message: error.message })
   }
 })
 
-// DELETE vacation
+// DELETE vacation request
 router.delete('/:id', async (req, res) => {
   try {
-    const deleted = await db('vacations')
+    const deleted = await db('vacation_requests')
       .where({ id: req.params.id })
       .del()
     
     if (!deleted) {
-      return res.status(404).json({ error: 'Vacation not found' })
+      return res.status(404).json({ error: 'Vacation request not found' })
     }
     
-    res.json({ message: 'Vacation deleted successfully' })
+    res.json({ message: 'Vacation request deleted successfully' })
   } catch (error) {
-    console.error('Error deleting vacation:', error)
-    res.status(500).json({ error: 'Failed to delete vacation' })
+    console.error('Error deleting vacation request:', error)
+    res.status(500).json({ error: 'Failed to delete vacation request', message: error.message })
   }
 })
 

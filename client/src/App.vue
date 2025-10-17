@@ -14,11 +14,7 @@
       <router-view />
     </main>
     
-    <footer :class="styles.footer">
-      <div :class="styles.container">
-        <p>&copy; 2025 Vacation Management. All rights reserved.</p>
-      </div>
-    </footer>
+ 
   </div>
 </template>
 

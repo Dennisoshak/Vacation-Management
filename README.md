@@ -62,11 +62,13 @@ cd server
 npm run migrate:latest
 ```
 
-### 3. Seed the Database (Optional)
+### 3. Seed the Database
 
 ```bash
 npm run seed:run
 ```
+
+This will create 5 users (3 requesters and 2 validators). No vacation requests are pre-seeded.
 
 ### 4. Start Development Servers
 
@@ -91,14 +93,37 @@ This will start both the frontend (http://localhost:3000) and backend (http://lo
 - `npm run migrate:rollback` - Rollback last migration
 - `npm run seed:run` - Run all seeds
 
+## Database Schema
+
+### Users Table
+- `id` - Primary key
+- `name` - User's full name
+- `role` - Either 'requester' or 'validator'
+- `created_at`, `updated_at` - Timestamps
+
+### Vacation Requests Table
+- `id` - Primary key
+- `user_id` - Foreign key to users table
+- `start_date` - Vacation start date
+- `end_date` - Vacation end date
+- `reason` - Optional reason for the request
+- `status` - 'pending', 'approved', or 'rejected'
+- `comments` - Manager's comments (especially for rejections)
+- `created_at` - Request creation timestamp
+
 ## API Endpoints
 
-- `GET /api/health` - Health check endpoint
-- `GET /api/vacations` - Get all vacations
-- `GET /api/vacations/:id` - Get vacation by ID
-- `POST /api/vacations` - Create new vacation
-- `PUT /api/vacations/:id` - Update vacation
-- `DELETE /api/vacations/:id` - Delete vacation
+### Users
+- `GET /api/users` - Get all users
+- `GET /api/users/:id` - Get user by ID
+- `GET /api/users/role/:role` - Get users by role (requester/validator)
+
+### Vacation Requests
+- `GET /api/vacations` - Get all vacation requests (with user info)
+- `GET /api/vacations/:id` - Get vacation request by ID
+- `POST /api/vacations` - Create new vacation request
+- `PUT /api/vacations/:id` - Update vacation request
+- `DELETE /api/vacations/:id` - Delete vacation request
 
 ## Notes
 

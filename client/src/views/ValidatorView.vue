@@ -90,7 +90,7 @@ export default {
       try {
         await axios.put(`/api/vacations/${id}`, { 
           status: 'rejected',
-          rejection_comment: comment 
+          comments: comment 
         })
         showMessage('Vacation request rejected.', 'Error')
         vacationListRef.value.fetchVacations()
