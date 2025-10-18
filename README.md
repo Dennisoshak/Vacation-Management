@@ -5,18 +5,21 @@ A full-stack vacation management application built with Vue 3, Express, and SQLL
 ## Tech Stack
 
 ### Frontend
+
 - **Vue 3** - Progressive JavaScript framework
 - **Vite** - Next generation frontend tooling
 - **Vue Router** - Official router for Vue.js
 - **Axios** - Promise-based HTTP client
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express** - Web application framework
 - **Knex.js** - SQL query builder
 - **SQLite** - Lightweight relational database
 
 ### Testing
+
 - **Jest** - JavaScript testing framework
 - **Supertest** - HTTP assertion library for API testing
 
@@ -35,6 +38,7 @@ npm run dev
 ```
 
 The application will be available at:
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000
 
@@ -75,15 +79,32 @@ npm run dev
 
 This will start both the frontend and backend servers.
 
+### Run All Tests
+
+```bash
+cd server
+npm test
+```
+
+### Run Tests in Watch Mode
+
+Automatically re-run tests when files change:
+
+```bash
+npm run test:watch
+```
+
 ## Database Schema
 
 ### Users Table
+
 - `id` - Primary key
 - `name` - User's full name
 - `role` - Either 'requester' or 'validator'
 - `created_at`, `updated_at` - Timestamps
 
 ### Vacation Requests Table
+
 - `id` - Primary key
 - `user_id` - Foreign key to users table
 - `start_date` - Vacation start date
@@ -96,11 +117,13 @@ This will start both the frontend and backend servers.
 ## API Endpoints
 
 ### Users
+
 - `GET /api/users` - Get all users
 - `GET /api/users/:id` - Get user by ID
 - `GET /api/users/role/:role` - Get users by role (requester/validator)
 
 ### Vacation Requests
+
 - `GET /api/vacations` - Get all vacation requests (with user info)
 - `GET /api/vacations/:id` - Get vacation request by ID
 - `POST /api/vacations` - Create new vacation request
