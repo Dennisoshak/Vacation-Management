@@ -12,7 +12,6 @@ export const up = async (knex) => {
     table.enum('status', ['pending', 'approved', 'rejected']).defaultTo('pending')
     table.text('comments')
     table.timestamp('created_at').defaultTo(knex.fn.now())
-    
     table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE')
   })
 }

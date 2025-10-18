@@ -81,18 +81,6 @@ npm run dev
 
 This will start both the frontend (http://localhost:3000) and backend (http://localhost:5000) servers.
 
-## Available Scripts
-
-### Root Directory
-- `npm run dev` - Start both client and server
-- `npm run install:all` - Install dependencies for all projects
-
-### Server Directory
-- `npm run dev` - Start server with nodemon
-- `npm run migrate:latest` - Run all migrations
-- `npm run migrate:rollback` - Rollback last migration
-- `npm run seed:run` - Run all seeds
-
 ## Database Schema
 
 ### Users Table
