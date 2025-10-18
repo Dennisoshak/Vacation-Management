@@ -16,53 +16,47 @@ A full-stack vacation management application built with Vue 3, Express, and SQLL
 - **Knex.js** - SQL query builder
 - **SQLite** - Lightweight relational database
 
-## Project Structure
+### Testing
+- **Jest** - JavaScript testing framework
+- **Supertest** - HTTP assertion library for API testing
 
-```
-vacation-management/
-├── client/                 # Vue 3 frontend
-│   ├── src/
-│   │   ├── views/         # Page components
-│   │   ├── router/        # Vue Router configuration
-│   │   ├── App.vue        # Root component
-│   │   └── main.js        # Application entry point
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-├── server/                # Express backend
-│   ├── src/
-│   │   ├── config/        # Database and configuration
-│   │   ├── routes/        # API routes
-│   │   ├── migrations/    # Database migrations
-│   │   ├── seeds/         # Database seeds
-│   │   └── index.js       # Server entry point
-│   ├── .env.example
-│   └── package.json
-└── package.json           # Root package.json
+### Quick Setup (Recommended)
+
+Run the automated setup command that installs all dependencies, runs migrations, and seeds the database:
+
+```bash
+npm run setup
 ```
 
-## Prerequisites
+Then start the application:
 
-- Node.js (v16 or higher)
-- npm or yarn
+```bash
+npm run dev
+```
 
-## Getting Started
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
 
-### 1. Install Dependencies
+### Manual Setup
+
+If you prefer to set up step by step:
+
+#### 1. Install Dependencies
 
 ```bash
 # Install all dependencies (root, client, and server)
 npm run install:all
 ```
 
-### 2. Run Database Migrations
+#### 2. Run Database Migrations
 
 ```bash
 cd server
 npm run migrate:latest
 ```
 
-### 3. Seed the Database
+#### 3. Seed the Database
 
 ```bash
 npm run seed:run
@@ -70,7 +64,7 @@ npm run seed:run
 
 This will create 5 users (3 requesters and 2 validators). No vacation requests are pre-seeded.
 
-### 4. Start Development Servers
+#### 4. Start Development Servers
 
 From the root directory:
 
@@ -79,7 +73,7 @@ cd ..
 npm run dev
 ```
 
-This will start both the frontend (http://localhost:3000) and backend (http://localhost:5000) servers.
+This will start both the frontend and backend servers.
 
 ## Database Schema
 
