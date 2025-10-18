@@ -1,7 +1,7 @@
 {
   "name": "vacation-management",
-  "version": "1.0.0",
   "description": "Vacation Management - Local development project",
+  "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
